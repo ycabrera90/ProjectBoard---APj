@@ -15,13 +15,13 @@ class DOMHelper {
 class Component {}
 
 class Tooltip {
-    constructor(closeNotifierFunction) {
+    constructor(closeNotifierFunction, text) {
+        this.text = text;
         this.create();
         this.closeNotifier = closeNotifierFunction;
     }
 
     detach() {
-        console.log('hay que quitarlo');
         this.tooltiElement.remove();
         this.closeNotifier('hide');
     }
@@ -29,7 +29,7 @@ class Tooltip {
     create() {
         this.tooltiElement = document.createElement('div');
         this.tooltiElement.className = 'card';
-        this.tooltiElement.textContent = 'this is my tooltip';
+        this.tooltiElement.textContent = this.text;
         this.tooltiElement.addEventListener('click', this.detach.bind(this));
     }
 
@@ -49,15 +49,18 @@ class ProjectItem {
         this.type = type;
         this.ProjectList_switchProject = switchProjectHandler;
         this.hasTooltip = false;
+        this.infoText;
         this.connectSwithButton(type);
         this.connetMoreInfoButton();
     }
 
     switchMoreInfo(type) {
-        console.log(type);
         if (type === 'show') {
             if (!this.hasTooltip) {
-                const tooltip = new Tooltip(this.switchMoreInfo.bind(this));
+                const tooltip = new Tooltip(
+                    this.switchMoreInfo.bind(this),
+                    `this is the info of item ${this.id}`
+                );
                 this.hasTooltip = tooltip.attach(this.hasTooltip);
             }
         } else if (type === 'hide') {
