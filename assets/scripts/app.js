@@ -4,6 +4,7 @@ class DOMHelper {
     static moveElement(elementId, newDestinations) {
         const elementToAdd = document.querySelector(`#${elementId}`);
         newDestinations.appendChild(elementToAdd);
+        elementToAdd.scrollIntoView({ behavior: 'smooth' });
     }
     static clearEventListeners(element) {
         const clonedElement = element.cloneNode(true);
@@ -74,6 +75,7 @@ class ProjectItem {
         this.hasTooltip = false;
         this.connectSwithButton(type);
         this.connetMoreInfoButton();
+        this.connectDrag();
     }
 
     switchMoreInfo(type) {
@@ -102,6 +104,17 @@ class ProjectItem {
             'click',
             this.switchMoreInfo.bind(this, 'show')
         );
+    }
+
+    connectDrag() {
+        document
+            .querySelector(`#${this.id}`)
+            .addEventListener('dragstart', (event) => {
+                // este evento se ejecuta cuando se toca el elemento y se intenta mover
+                event.dataTransfer.setData('text/plain', this.id); // guardo en el evento el Id del elemento que se mueve
+                console.log(this.id);
+                event.dataTransfer.effectAllowed = 'move'; // declaro que la operacion a relizar es una movida
+            });
     }
 
     connectSwithButton(type) {
@@ -135,6 +148,50 @@ class ProjectList {
                 new ProjectItem(prjItem.id, type, this.switchProject.bind(this))
             );
         }
+        this.connetDroppable();
+    }
+
+    connetDroppable() {
+        const list = document.querySelector(`#${this.type}-projects ul`);
+        console.log(list);
+        list.addEventListener('dragenter', (event) => {
+            if (event.dataTransfer.types[0] === 'text/plain') {
+                // esta condicion se usa para garantizar que el tipo de elemento que vamos a soltar es el adecuado para hacer drop en esta lista
+                list.classList.add('droppable');
+                event.preventDefault(); // por defecto las litas dejan hacer el drop de elemento pero no dejan desparar listener para el drop
+            }
+        });
+        list.addEventListener('dragover', (event) => {
+            if (event.dataTransfer.types[0] === 'text/plain') {
+                // esta condicion se usa para garantizar que el tipo de elemento que vamos a soltar es el adecuado para hacer drop en esta lista
+                event.preventDefault(); // por defecto las litas dejan hacer el drop de elemento pero no dejan desparar listener para el drop
+            }
+        });
+
+        list.addEventListener('dragleave', (event) => {
+            if (
+                event.relatedTarget.closest(`#${this.type}-projects ul`) !==
+                list
+            ) {
+                list.classList.remove('droppable');
+            }
+        });
+
+        list.addEventListener('drop', (event) => {
+            const prjId = event.dataTransfer.getData('text/plain'); // obtengo el id
+
+            // me aseguro de no soltar el elemento en la misma lista
+            if (this.projects.find((p) => p.id === prjId)) {
+                return;
+            }
+
+            // hacemos click en el boton de finalizar ya que realmente hace lo que nosotros necesitamos.
+            const buttonEnd = document
+                .querySelector(`#${prjId} button:last-of-type`)
+                .click();
+
+            list.classList.remove('droppable');
+        });
     }
 
     moveProject(project) {
