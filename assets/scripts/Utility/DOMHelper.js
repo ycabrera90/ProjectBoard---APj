@@ -1,4 +1,4 @@
-class DOMHelper {
+export class DOMHelper {
     static moveElement(elementId, newDestinations) {
         const elementToAdd = document.querySelector(`#${elementId}`);
         newDestinations.appendChild(elementToAdd);

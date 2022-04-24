@@ -1,4 +1,7 @@
-class ProjectList {
+import { ProjectItem } from './ProjectItem.js';
+import { DOMHelper } from '../Utility/DOMHelper.js';
+
+export class ProjectList {
     projects = [];
     constructor(type) {
         this.type = type;
@@ -14,7 +17,6 @@ class ProjectList {
 
     connetDroppable() {
         const list = document.querySelector(`#${this.type}-projects ul`);
-        console.log(list);
         list.addEventListener('dragenter', (event) => {
             if (event.dataTransfer.types[0] === 'text/plain') {
                 // esta condicion se usa para garantizar que el tipo de elemento que vamos a soltar es el adecuado para hacer drop en esta lista

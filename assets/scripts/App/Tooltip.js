@@ -1,4 +1,4 @@
-class Tooltip {
+export class Tooltip {
     constructor(closeNotifierFunction, text, id) {
         this.text = text;
         this.id = id;
@@ -28,20 +28,15 @@ class Tooltip {
         tooltipElement.style.position = 'absolute';
         tooltipElement.style.left = `${x}px`;
         tooltipElement.style.top = `${y}px`;
-        // console.log(parentELementScrolling);
         // tooltipElement.style.left = hostElPosLeft + `px`;
         // tooltipElement.style.top = hostElPosTop + `px`;
 
-        console.log(hostElement);
-        console.log(hostElPosLeft, hostElPosTop, hostElHeight);
 
         tooltipElement.addEventListener('click', this.detach.bind(this));
         this.element = tooltipElement;
     }
 
     attach(hasTooltip) {
-        console.dir(hasTooltip);
-        console.dir(this.element);
         if (hasTooltip) {
             return;
         }
