@@ -2,7 +2,7 @@
 
 ## DESCRIPTION
 
-It is a small web application for academic use that shows work with Google APIs.
+It is a small web application for academic use that shows how to work with OPP and use the draw a drop.
 
 ## Serve App
 
