@@ -1,5 +1,6 @@
 'use strict';
-import { ProjectList } from './App/ProjectList.js';
+// import { ProjectList } from './App/ProjectList.js';
+import { ProjectList } from './UI/ProjectList.js';
 class App {
     static init() {
         const activeProjectList = new ProjectList('active');
